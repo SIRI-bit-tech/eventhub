@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block title %}EventHub - Find Community Events{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+    <!-- Hero Section -->
+    <section class="bg-gradient-to-r from-primary-600 to-primary-800 text-white rounded-xl p-8 shadow-lg">
+        <div class="max-w-3xl mx-auto text-center">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Discover Events in Your Community</h1>
+            <p class="text-xl mb-6">Join, organize, and connect with people who share your interests.</p>
+            {% if user.is_authenticated %}
+                <a href="{% url 'event_create' %}" class="inline-block bg-accent-500 hover:bg-accent-600 text-white font-bold py-3 px-6 rounded-lg transition transform hover:scale-105">
+                    Create an Event
+                </a>
+            {% else %}
+                <a href="{% url 'register' %}" class="inline-block bg-accent-500 hover:bg-accent-600 text-white font-bold py-3 px-6 rounded-lg transition transform hover:scale-105">
+                    Join Now
+                </a>
+            {% endif %}
+        </div>
+    </section>
+    
+    <!-- Search and Filter Section -->
+    <section class="bg-white rounded-lg shadow-md p-6">
+        <div class="flex flex-col md:flex-row gap-4">
+            <div class="flex-grow">
+                <form method="get" action="{% url 'home' %}" class="flex">
+                    <input type="text" name="q" placeholder="Search events..." value="{{ request.GET.q }}"
+                           class="flex-grow px-4 py-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-primary-500">
+                    <button type="submit" class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-r-lg">
+                        Search
+                    </button>
+                </form>
+            </div>
+            <div>
+                <select name="category" 
+                        hx-get="{% url 'load_events_by_category' %}" 
+                        hx-trigger="change" 
+                        hx-target="#event-list"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500">
+                    <option value="">All Categories</option>
+                    {% for category in categories %}
+                        {% if category %}
+                            <option value="{{ category }}" {% if request.GET.category == category %}selected{% endif %}>
+                                {{ category }}
+                            </option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Events List -->
+    <section>
+        <h2 class="text-2xl font-bold mb-6">Upcoming Events</h2>
+        
+        <div id="event-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% include 'events/partials/event_list.html' with events=events %}
+        </div>
+        
+        <!-- Pagination -->
+        {% if is_paginated %}
+        <div class="mt-8 flex justify-center">
+            <div class="inline-flex rounded-md shadow-sm">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}" 
+                       class="px-4 py-2 border border-gray-300 bg-white text-sm font-medium rounded-l-md hover:bg-gray-50">
+                        First
+                    </a>
+                    <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}" 
+                       class="px-4 py-2 border-t border-b border-r border-gray-300 bg-white text-sm font-medium hover:bg-gray-50">
+                        Previous
+                    </a>
+                {% endif %}
+                
+                <span class="px-4 py-2 border border-primary-500 bg-primary-50 text-primary-700 text-sm font-medium">
+                    {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                </span>
+                
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}" 
+                       class="px-4 py-2 border-t border-b border-l border-gray-300 bg-white text-sm font-medium hover:bg-gray-50">
+                        Next
+                    </a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}" 
+                       class="px-4 py-2 border border-gray-300 bg-white text-sm font-medium rounded-r-md hover:bg-gray-50">
+                        Last
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+    </section>
+</div>
+{% endblock %}

@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}Google Calendar Events | EventHub{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <div class="bg-white rounded-lg shadow-md overflow-hidden mb-8">
+        <div class="bg-gradient-to-r from-primary-600 to-primary-800 p-6 text-white">
+            <h1 class="text-2xl font-bold">Your Google Calendar Events</h1>
+        </div>
+
+        <div class="p-6">
+            {% if events %}
+                <div class="space-y-4">
+                    {% for event in events %}
+                        <div class="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition">
+                            <div class="flex justify-between items-start">
+                                <h3 class="text-lg font-bold">{{ event.summary }}</h3>
+                                {% if event.start.dateTime %}
+                                    <span class="text-sm bg-primary-100 text-primary-800 px-2 py-1 rounded-full">
+                                        {{ event.start.dateTime|slice:":10" }}
+                                    </span>
+                                {% endif %}
+                            </div>
+
+                            {% if event.description %}
+                                <p class="text-gray-600 mt-2">{{ event.description }}</p>
+                            {% endif %}
+
+                            <div class="flex items-center mt-2 text-gray-500">
+                                {% if event.start.dateTime %}
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    <span>{{ event.start.dateTime|slice:"11:16" }} - {{ event.end.dateTime|slice:"11:16" }}</span>
+                                {% endif %}
+                            </div>
+
+                            {% if event.location %}
+                                <div class="flex items-center mt-1 text-gray-500">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    </svg>
+                                    <span>{{ event.location }}</span>
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="text-center py-12">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <h3 class="text-xl font-medium text-gray-900 mb-1">No events found</h3>
+                    <p class="text-gray-500">You don't have any upcoming events in your Google Calendar.</p>
+                </div>
+            {% endif %}
+
+            <div class="mt-8 flex justify-between">
+                <a href="{% url 'home' %}" class="inline-flex items-center text-primary-600 hover:text-primary-800">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+                    </svg>
+                    Back to Events
+                </a>
+
+                <a href="{% url 'google_calendar_init' %}" class="inline-flex items-center text-primary-600 hover:text-primary-800">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd" />
+                    </svg>
+                    Refresh Calendar
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Community Event Platform{% endblock %}</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f5f3ff',
+                            100: '#ede9fe',
+                            200: '#ddd6fe',
+                            300: '#c4b5fd',
+                            400: '#a78bfa',
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                            700: '#6d28d9',
+                            800: '#5b21b6',
+                            900: '#4c1d95',
+                        },
+                        secondary: {
+                            50: '#ecfdf5',
+                            100: '#d1fae5',
+                            200: '#a7f3d0',
+                            300: '#6ee7b7',
+                            400: '#34d399',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                            800: '#065f46',
+                            900: '#064e3b',
+                        },
+                        accent: {
+                            50: '#fff7ed',
+                            100: '#ffedd5',
+                            200: '#fed7aa',
+                            300: '#fdba74',
+                            400: '#fb923c',
+                            500: '#f97316',
+                            600: '#ea580c',
+                            700: '#c2410c',
+                            800: '#9a3412',
+                            900: '#7c2d12',
+                        },
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- HTMX -->
+    <script src="https://unpkg.com/htmx.org@1.9.2"></script>
+
+    <!-- Alpine.js for interactive components -->
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- Custom CSS -->
+    <style>
+        [x-cloak] { display: none !important; }
+    </style>
+
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <!-- Navigation -->
+    <nav class="bg-primary-700 text-white shadow-md">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex justify-between items-center">
+                <a href="{% url 'home' %}" class="text-2xl font-bold">EventHub</a>
+
+                <div x-data="{ open: false }" class="relative">
+                    <!-- Mobile menu button -->
+                    <button @click="open = !open" class="md:hidden flex items-center p-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+
+                    <!-- Desktop menu -->
+                    <div class="hidden md:flex space-x-4 items-center">
+                        <a href="{% url 'home' %}" class="hover:text-primary-200 transition">Home</a>
+                        {% if user.is_authenticated %}
+                            <a href="{% url 'event_create' %}" class="hover:text-primary-200 transition">Create Event</a>
+                            <a href="{% url 'profile' %}" class="hover:text-primary-200 transition">Profile</a>
+                            <a href="{% url 'logout' %}" class="bg-primary-800 hover:bg-primary-900 px-4 py-2 rounded-lg transition">Logout</a>
+                        {% else %}
+                            <a href="{% url 'login' %}" class="hover:text-primary-200 transition">Login</a>
+                            <a href="{% url 'register' %}" class="bg-primary-800 hover:bg-primary-900 px-4 py-2 rounded-lg transition">Register</a>
+                        {% endif %}
+                    </div>
+
+                    <!-- Mobile menu -->
+                    <div x-show="open" @click.away="open = false" x-cloak
+                         class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
+                        <a href="{% url 'home' %}" class="block px-4 py-2 text-gray-800 hover:bg-primary-100">Home</a>
+                        {% if user.is_authenticated %}
+                            <a href="{% url 'event_create' %}" class="block px-4 py-2 text-gray-800 hover:bg-primary-100">Create Event</a>
+                            <a href="{% url 'profile' %}" class="block px-4 py-2 text-gray-800 hover:bg-primary-100">Profile</a>
+                            <a href="{% url 'logout' %}" class="block px-4 py-2 text-gray-800 hover:bg-primary-100">Logout</a>
+                        {% else %}
+                            <a href="{% url 'login' %}" class="block px-4 py-2 text-gray-800 hover:bg-primary-100">Login</a>
+                            <a href="{% url 'register' %}" class="block px-4 py-2 text-gray-800 hover:bg-primary-100">Register</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Messages -->
+    {% if messages %}
+    <div class="container mx-auto px-4 mt-4">
+        {% for message in messages %}
+            <div class="p-4 mb-4 rounded-md {% if message.tags == 'success' %}bg-green-100 text-green-800{% elif message.tags == 'error' %}bg-red-100 text-red-800{% else %}bg-blue-100 text-blue-800{% endif %}"
+                 x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 5000)">
+                <div class="flex justify-between items-center">
+                    <p>{{ message }}</p>
+                    <button @click="show = false" class="text-gray-500 hover:text-gray-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Main Content -->
+    <main class="flex-grow container mx-auto px-4 py-8">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-6">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <h3 class="text-xl font-bold">EventHub</h3>
+                    <p class="text-gray-400">Connect with your community</p>
+                </div>
+                <div class="flex space-x-4">
+                    <a href="#" class="hover:text-primary-400 transition">About</a>
+                    <a href="#" class="hover:text-primary-400 transition">Privacy</a>
+                    <a href="#" class="hover:text-primary-400 transition">Terms</a>
+                    <a href="#" class="hover:text-primary-400 transition">Contact</a>
+                </div>
+            </div>
+            <div class="mt-4 text-center text-gray-400">
+                <p>&copy; {% now "Y" %} EventHub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

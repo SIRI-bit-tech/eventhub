@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+    {% if form.instance.pk %}Edit Event{% else %}Create Event{% endif %} | EventHub
+{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h1 class="text-2xl font-bold mb-6">
+            {% if form.instance.pk %}Edit Event{% else %}Create Event{% endif %}
+        </h1>
+        
+        <form method="post" enctype="multipart/form-data" class="space-y-6">
+            {% csrf_token %}
+            
+            {{ form|crispy }}
+            
+            <div class="flex justify-end gap-4">
+                <a href="{% if form.instance.pk %}{% url 'event_detail' form.instance.pk %}{% else %}{% url 'home' %}{% endif %}" 
+                   class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition">
+                    Cancel
+                </a>
+                <button type="submit" class="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-md transition">
+                    {% if form.instance.pk %}Update Event{% else %}Create Event{% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

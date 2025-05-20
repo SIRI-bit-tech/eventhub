@@ -1,0 +1,61 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Django
+*.log
+db.sqlite3
+db.sqlite3-journal
+media/
+staticfiles/
+.env
+.env.*
+local_settings.py
+
+# Virtualenv
+venv/
+ENV/
+env/
+.venv/
+
+# Node/Tailwind
+node_modules/
+package-lock.json
+yarn.lock
+dist/
+build/
+*.css.map
+*.js.map
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDEs/editors
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+*.swp
+*.bak
+*.tmp
+
+# Coverage/test
+htmlcov/
+.coverage
+.tox/
+.nox/
+.pytest_cache/
+
+# Misc
+*.orig
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log* 
