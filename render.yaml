@@ -1,0 +1,99 @@
+services:
+  # Web service (Django application)
+  - type: web
+    name: eventhub
+    env: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn event_platform.wsgi:application"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.0
+      - key: DEBUG
+        value: False
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ALLOWED_HOSTS
+        value: ".onrender.com,localhost,127.0.0.1"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: eventhub_db
+          property: connectionString
+      - key: CELERY_BROKER_URL
+        fromService:
+          name: eventhub-redis
+          type: redis
+          property: connectionString
+      - key: CELERY_RESULT_BACKEND
+        fromService:
+          name: eventhub-redis
+          type: redis
+          property: connectionString
+
+  # Celery Worker
+  - type: worker
+    name: eventhub-worker
+    env: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "celery -A event_platform worker -l info"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.0
+      - key: DEBUG
+        value: False
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: eventhub_db
+          property: connectionString
+      - key: CELERY_BROKER_URL
+        fromService:
+          name: eventhub-redis
+          type: redis
+          property: connectionString
+      - key: CELERY_RESULT_BACKEND
+        fromService:
+          name: eventhub-redis
+          type: redis
+          property: connectionString
+
+  # Celery Beat
+  - type: worker
+    name: eventhub-beat
+    env: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "celery -A event_platform beat -l info"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.0
+      - key: DEBUG
+        value: False
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: eventhub_db
+          property: connectionString
+      - key: CELERY_BROKER_URL
+        fromService:
+          name: eventhub-redis
+          type: redis
+          property: connectionString
+      - key: CELERY_RESULT_BACKEND
+        fromService:
+          name: eventhub-redis
+          type: redis
+          property: connectionString
+
+# Redis instance for Celery
+  - type: redis
+    name: eventhub-redis
+    ipAllowList:
+      - source: 0.0.0.0/0
+        description: everywhere
+
+# Database
+databases:
+  - name: eventhub_db
+    databaseName: eventhub_db
+    user: eventhub

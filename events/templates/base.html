@@ -3,8 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Community Event Platform{% endblock %}</title>
-
+    
+    <!-- Primary Meta Tags -->
+    <title>{% block title %}Community Event Platform{% endblock %} | EventHub</title>
+    <meta name="title" content="{% block meta_title %}Community Event Platform | EventHub{% endblock %}">
+    <meta name="description" content="{% block meta_description %}Discover and connect with local events in your community. Find workshops, meetups, and activities near you or create your own event.{% endblock %}">
+    <meta name="keywords" content="{% block meta_keywords %}events, community events, local events, workshops, meetups, event management{% endblock %}">
+    <meta name="author" content="EventHub">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    <meta property="og:title" content="{% block og_title %}Community Event Platform | EventHub{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}Discover and connect with local events in your community. Find workshops, meetups, and activities near you or create your own event.{% endblock %}">
+    <meta property="og:image" content="{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'images/eventhub-social-share.jpg' %}{% endblock %}">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="{{ request.build_absolute_uri }}">
+    <meta property="twitter:title" content="{% block twitter_title %}Community Event Platform | EventHub{% endblock %}">
+    <meta property="twitter:description" content="{% block twitter_description %}Discover and connect with local events in your community. Find workshops, meetups, and activities near you or create your own event.{% endblock %}">
+    <meta property="twitter:image" content="{% block twitter_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'images/eventhub-social-share.jpg' %}{% endblock %}">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="{{ request.build_absolute_uri }}">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
+    
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -87,6 +113,19 @@
         }
     </style>
 
+    <!-- Structured Data - Organization -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "EventHub",
+      "url": "{{ request.scheme }}://{{ request.get_host }}",
+      "logo": "{{ request.scheme }}://{{ request.get_host }}{% static 'images/eventhub-logo.png' %}",
+      "description": "A platform to discover and share community events."
+    }
+    </script>
+    
+    {% block structured_data %}{% endblock %}
     {% block extra_head %}{% endblock %}
 </head>
 <body class="bg-gray-50 min-h-screen flex flex-col">
@@ -98,7 +137,7 @@
 
                 <div x-data="{ open: false }" class="relative">
                     <!-- Mobile menu button -->
-                    <button @click="open = !open" class="md:hidden flex items-center p-2">
+                    <button @click="open = !open" class="md:hidden flex items-center p-2" aria-label="Toggle navigation menu">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                         </svg>
@@ -143,7 +182,7 @@
                  x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 5000)">
                 <div class="flex justify-between items-center">
                     <p>{{ message }}</p>
-                    <button @click="show = false" class="text-gray-500 hover:text-gray-700">
+                    <button @click="show = false" class="text-gray-500 hover:text-gray-700" aria-label="Close message">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
                         </svg>
