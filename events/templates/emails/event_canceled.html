@@ -1,10 +1,66 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <title>Event Canceled: {{ event.title }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .header {
+            background-color: #ef4444;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .content {
+            padding: 20px;
+        }
+        .button {
+            display: inline-block;
+            background-color: #6d28d9;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
 </head>
 <body>
-$END$
+    <div class="header">
+        <h1>Event Canceled</h1>
+    </div>
+
+    <div class="content">
+        <p>Hello,</p>
+
+        <p>We regret to inform you that the following event has been canceled:</p>
+
+        <h2>{{ event.title }}</h2>
+        <p><strong>Originally scheduled for:</strong> {{ event.start_time|date:"F j, Y" }} at {{ event.start_time|date:"g:i A" }}</p>
+
+        <p>We apologize for any inconvenience this may cause.</p>
+
+        <a href="{{ site_url }}{% url 'home' %}" class="button">Browse Other Events</a>
+
+        <p>Best regards,<br>
+        The EventHub Team</p>
+    </div>
+
+    <div class="footer">
+        <p>You received this email because you're registered on EventHub and had RSVP'd to this event.</p>
+        <p>If you'd like to unsubscribe from these notifications, please update your preferences in your profile.</p>
+    </div>
 </body>
 </html>

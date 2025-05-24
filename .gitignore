@@ -53,6 +53,10 @@ htmlcov/
 .nox/
 .pytest_cache/
 
+# Celery Beat
+celerybeat-schedule
+celerybeat.pid
+
 # Misc
 *.orig
 *.log

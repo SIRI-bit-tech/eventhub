@@ -25,7 +25,7 @@ urlpatterns = [
     path('', include('events.urls')),
     path('login/', auth_views.LoginView.as_view(template_name='events/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
-    path('api/', include('events.api.urls')),  # We'll create this later
+    path('api/', include('events.api.urls')),
 ]
 
 if settings.DEBUG:

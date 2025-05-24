@@ -1,0 +1,32 @@
+{% if user_rsvp %}
+    {% if user_rsvp.status == 'attending' %}
+        <form hx-post="{% url 'rsvp_event' event.pk %}" hx-target="#rsvp-section" class="w-full">
+            {% csrf_token %}
+            <input type="hidden" name="status" value="not_attending">
+            <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-medium px-4 py-2 rounded transition">
+                Cancel RSVP
+            </button>
+        </form>
+    {% else %}
+        <form hx-post="{% url 'rsvp_event' event.pk %}" hx-target="#rsvp-section" class="w-full">
+            {% csrf_token %}
+            <input type="hidden" name="status" value="attending">
+            <button type="submit" class="w-full bg-primary-600 hover:bg-primary-700 text-white font-medium px-4 py-2 rounded transition">
+                RSVP
+            </button>
+        </form>
+    {% endif %}
+{% else %}
+    <form hx-post="{% url 'rsvp_event' event.pk %}" hx-target="#rsvp-section" class="w-full">
+        {% csrf_token %}
+        <input type="hidden" name="status" value="attending">
+        <button type="submit" class="w-full bg-primary-600 hover:bg-primary-700 text-white font-medium px-4 py-2 rounded transition"
+                {% if event.is_full %}disabled{% endif %}>
+            {% if event.is_full %}
+                Event Full
+            {% else %}
+                RSVP
+            {% endif %}
+        </button>
+    </form>
+{% endif %}

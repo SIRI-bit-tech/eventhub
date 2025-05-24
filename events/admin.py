@@ -61,9 +61,11 @@ class UserProfileAdmin(admin.ModelAdmin):
     display_name.short_description = 'Name'
 
     def profile_picture_preview(self, obj):
-        if obj.profile_picture:
-            return format_html('<img src="{}" width="50" height="50" style="border-radius: 50%;" />',
-                               obj.profile_picture.url)
+        if obj.profile_picture and hasattr(obj.profile_picture, 'url'):
+            return format_html(
+                '<img src="{}" width="50" height="50" style="border-radius: 50%;" />',
+                obj.profile_picture.url
+            )
         return "No Image"
 
     profile_picture_preview.short_description = 'Profile Picture'

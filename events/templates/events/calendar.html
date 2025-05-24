@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+
+{% block title %}My Calendar | EventHub{% endblock %}
+
+{% block extra_head %}
+<!-- FullCalendar CSS -->
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.0/main.min.css" rel="stylesheet">
+<style>
+    .fc-event {
+        cursor: pointer;
+    }
+    .fc-toolbar-title {
+        font-size: 1.5rem !important;
+    }
+    .fc-button-primary {
+        background-color: #6d28d9 !important;
+        border-color: #5b21b6 !important;
+    }
+    .fc-button-primary:hover {
+        background-color: #5b21b6 !important;
+        border-color: #4c1d95 !important;
+    }
+    .fc-button-active {
+        background-color: #4c1d95 !important;
+        border-color: #4c1d95 !important;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto">
+    <div class="bg-white rounded-lg shadow-md overflow-hidden mb-8">
+        <div class="bg-gradient-to-r from-primary-600 to-primary-800 p-6 text-white">
+            <h1 class="text-2xl font-bold">My Calendar</h1>
+            <p class="text-primary-100">View and manage all your events in one place</p>
+        </div>
+        
+        <div class="p-6">
+            <div class="mb-6 flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <div class="flex items-center space-x-4">
+                        <div class="flex items-center">
+                            <span class="w-4 h-4 bg-primary-600 rounded-full mr-2"></span>
+                            <span class="text-sm text-gray-600">Events I'm Organizing</span>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="w-4 h-4 bg-secondary-500 rounded-full mr-2"></span>
+                            <span class="text-sm text-gray-600">Events I'm Attending</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex space-x-2">
+                    <a href="{% url 'event_create' %}" class="inline-flex items-center px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-md transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                        </svg>
+                        Create Event
+                    </a>
+                    <button id="sync-calendar" class="inline-flex items-center px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-md transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                        </svg>
+                        Sync with Google
+                    </button>
+                </div>
+            </div>
+            
+            <div id="calendar"></div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- FullCalendar JS -->
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.0/main.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const calendarEl = document.getElementById('calendar');
+        
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+            },
+            events: "{% url 'calendar_events' %}",
+            eventTimeFormat: {
+                hour: 'numeric',
+                minute: '2-digit',
+                meridiem: 'short'
+            },
+            height: 'auto',
+            themeSystem: 'standard',
+            firstDay: 1, // Monday as first day
+            navLinks: true,
+            dayMaxEvents: true,
+            eventClick: function(info) {
+                window.location.href = info.event.url;
+            }
+        });
+        
+        calendar.render();
+        
+        // Handle Google Calendar sync
+        document.getElementById('sync-calendar').addEventListener('click', function() {
+            fetch("{% url 'calendar_sync' %}", {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({})
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    alert('Calendar synced successfully!');
+                    calendar.refetchEvents();
+                } else {
+                    alert('Error syncing calendar: ' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while syncing the calendar.');
+            });
+        });
+    });
+</script>
+{% endblock %}

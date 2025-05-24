@@ -60,9 +60,31 @@
     <!-- Alpine.js for interactive components -->
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
+    <!-- Uploadcare Widget -->
+    <script src="https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js"></script>
+    <script>
+        UPLOADCARE_PUBLIC_KEY = '{{ UPLOADCARE_PUBLIC_KEY }}';
+        UPLOADCARE_TABS = 'file camera url facebook gdrive gphotos';
+        UPLOADCARE_PREVIEW_STEP = true;
+        UPLOADCARE_CLEARABLE = true;
+    </script>
+
     <!-- Custom CSS -->
     <style>
         [x-cloak] { display: none !important; }
+
+        /* Style for Uploadcare widget */
+        .uploadcare--widget__button {
+            background-color: #6d28d9;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .uploadcare--widget__button:hover {
+            background-color: #5b21b6;
+        }
     </style>
 
     {% block extra_head %}{% endblock %}

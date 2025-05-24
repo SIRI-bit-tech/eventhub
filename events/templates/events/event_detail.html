@@ -16,7 +16,7 @@
     <div class="bg-white rounded-lg shadow-md overflow-hidden mb-8">
         {% if event.image %}
             <div class="h-64 md:h-80 w-full relative">
-                <img src="{{ event.image.url }}" alt="{{ event.title }}" class="w-full h-full object-cover">
+                <img src="{{ event.image.cdn_url }}-/preview/1200x800/" alt="{{ event.title }}" class="w-full h-full object-cover">
                 <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                 <div class="absolute bottom-0 left-0 p-6 text-white">
                     <h1 class="text-3xl md:text-4xl font-bold mb-2">{{ event.title }}</h1>
@@ -63,6 +63,9 @@
                     <div class="prose max-w-none">
                         {{ event.description|linebreaks }}
                     </div>
+
+                    <!-- Social Sharing Section -->
+                    {% include 'events/partials/social_sharing.html' %}
                 </div>
 
                 <!-- Right Column -->
@@ -91,6 +94,18 @@
                         <div id="rsvp-section">
                             {% include 'events/partials/rsvp_form.html' %}
                         </div>
+
+                        <!-- Add to Calendar Button -->
+                        <div class="mt-4">
+                            <a href="{% url 'add_event_to_calendar' event.pk %}" class="block bg-secondary-600 hover:bg-secondary-700 text-white text-center font-medium px-4 py-2 rounded transition">
+                                <div class="flex items-center justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    </svg>
+                                    Add to Calendar
+                                </div>
+                            </a>
+                        </div>
                     {% else %}
                         <div class="bg-gray-50 rounded-lg p-4 text-center">
                             <p class="mb-3">Sign in to RSVP for this event</p>
@@ -114,7 +129,7 @@
 
                     {% if user.is_authenticated and user == event.organizer %}
                         <div class="mt-4 flex gap-2">
-                            <a href="{% url 'event_update' event.pk %}" class="flex-1 inline-block bg-secondary-600 hover:bg-secondary-700 text-white text-center font-medium px-4 py-2 rounded transition">
+                            <a href="{% url 'event_edit' event.pk %}" class="flex-1 inline-block bg-secondary-600 hover:bg-secondary-700 text-white text-center font-medium px-4 py-2 rounded transition">
                                 Edit
                             </a>
                             <a href="{% url 'event_delete' event.pk %}" class="flex-1 inline-block bg-red-600 hover:bg-red-700 text-white text-center font-medium px-4 py-2 rounded transition">

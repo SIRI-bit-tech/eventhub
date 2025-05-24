@@ -1,23 +1,41 @@
-from django.urls import path
+from django.urls import path, include
 from . import views, views_calendar
+from rest_framework.routers import DefaultRouter
+
+# Create a router for REST API
+router = DefaultRouter()
+router.register(r'events', views.EventViewSet, basename='event')
+router.register(r'rsvps', views.RSVPViewSet, basename='rsvp')
 
 urlpatterns = [
-    path('', views.HomeView.as_view(), name='home'),
-    path('event/<int:pk>/', views.EventDetailView.as_view(), name='event_detail'),
-    path('event/new/', views.EventCreateView.as_view(), name='event_create'),
-    path('event/<int:pk>/update/', views.EventUpdateView.as_view(), name='event_update'),
-    path('event/<int:pk>/delete/', views.EventDeleteView.as_view(), name='event_delete'),
-    path('event/<int:pk>/rsvp/', views.rsvp_event, name='rsvp_event'),
-    path('profile/', views.profile_view, name='profile'),
+    # Main views
+    path('', views.home, name='home'),  # Changed from HomeView.as_view() to home
+    path('events/<int:pk>/', views.event_detail, name='event_detail'),
+    path('events/create/', views.event_create, name='event_create'),
+    path('events/<int:pk>/edit/', views.event_edit, name='event_edit'),
+    path('events/<int:pk>/delete/', views.event_delete, name='event_delete'),
+    path('events/<int:pk>/rsvp/', views.rsvp_event, name='rsvp_event'),
+    path('events/<int:pk>/add-to-calendar/', views.add_event_to_calendar, name='add_event_to_calendar'),
+    path('events/<int:pk>/download-ics/', views.download_ics, name='download_ics'),
+
+    # HTMX partials
+    path('events/list/', views.event_list_partial, name='event_list_partial'),
+    path('events/by-category/', views.load_events_by_category, name='load_events_by_category'),
+
+
+
+    # User account views
     path('register/', views.register, name='register'),
+    path('profile/', views.profile_view, name='profile'),
 
-    # HTMX endpoints
-    path('events/category/', views.load_events_by_category, name='load_events_by_category'),
-    path('event/<int:pk>/toggle-attendance/', views.toggle_attendance, name='toggle_attendance'),
+    # Calendar views
+    path('calendar/', views_calendar.calendar_view, name='calendar'),
+    path('calendar/events/', views_calendar.get_user_events, name='calendar_events'),
+    path('calendar/sync/', views_calendar.google_calendar_sync, name='calendar_sync'),
 
-    # Google Calendar integration
-    path('calendar/init/', views_calendar.google_calendar_init, name='google_calendar_init'),
-    path('calendar/callback/', views_calendar.google_calendar_callback, name='google_calendar_callback'),
-    path('calendar/events/', views_calendar.google_calendar_events, name='google_calendar_events'),
-    path('event/<int:pk>/add-to-calendar/', views_calendar.add_event_to_google_calendar, name='add_event_to_calendar'),
+    # Google Calendar webhook
+    path('webhooks/google-calendar/', views.google_calendar_webhook, name='google_calendar_webhook'),
+
+    # REST API
+    path('api/', include(router.urls)),
 ]

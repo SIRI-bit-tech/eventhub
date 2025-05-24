@@ -2,7 +2,7 @@
     {% for event in events %}
         <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
             {% if event.image %}
-                <img src="{{ event.image.url }}" alt="{{ event.title }}" class="w-full h-48 object-cover">
+                <img src="{{ event.image.cdn_url }}-/preview/600x400/" alt="{{ event.title }}" class="w-full h-48 object-cover">
             {% else %}
                 <div class="w-full h-48 bg-gradient-to-r from-primary-400 to-primary-600 flex items-center justify-center text-white">
                     <span class="text-2xl font-bold">{{ event.title }}</span>

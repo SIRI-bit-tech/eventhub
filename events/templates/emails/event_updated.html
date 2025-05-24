@@ -1,10 +1,70 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <title>Event Updated: {{ event.title }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .header {
+            background-color: #6d28d9;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .content {
+            padding: 20px;
+        }
+        .button {
+            display: inline-block;
+            background-color: #6d28d9;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
 </head>
 <body>
-$END$
+    <div class="header">
+        <h1>Event Updated: {{ event.title }}</h1>
+    </div>
+
+    <div class="content">
+        <p>Hello,</p>
+
+        <p>An event you're attending has been updated:</p>
+
+        <h2>{{ event.title }}</h2>
+        <p><strong>Date:</strong> {{ event.start_time|date:"F j, Y" }}</p>
+        <p><strong>Time:</strong> {{ event.start_time|date:"g:i A" }} - {{ event.end_time|date:"g:i A" }}</p>
+        <p><strong>Location:</strong> {{ event.location }}</p>
+
+        <p>{{ event.description|truncatewords:50 }}</p>
+
+        <a href="{{ site_url }}{% url 'event_detail' event.id %}" class="button">View Updated Event</a>
+
+        <p>We hope to see you there!</p>
+
+        <p>Best regards,<br>
+        The EventHub Team</p>
+    </div>
+
+    <div class="footer">
+        <p>You received this email because you're registered on EventHub and have RSVP'd to this event.</p>
+        <p>If you'd like to unsubscribe from these notifications, please update your preferences in your profile.</p>
+    </div>
 </body>
 </html>
