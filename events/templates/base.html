@@ -32,7 +32,7 @@
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
     <link rel="apple-touch-icon" sizes="180x180" href="{% static 'images/apple-touch-icon.png' %}">
-    <link rel="icon" type="image/png" sizes="96x96" href="{% static 'images/favicon-96x96.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/favicon-32x32.png' %}">
     <link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/favicon-16x16.png' %}">
     
     <!-- Tailwind CSS -->
@@ -131,7 +131,7 @@
       "@type": "Organization",
       "name": "EventHub",
       "url": "{{ request.scheme }}://{{ request.get_host }}",
-      "logo": "{{ request.scheme }}://{{ request.get_host }}{% static 'images/eventhub-logo.png' %}",
+      "logo": "{{ request.scheme }}://{{ request.get_host }}{% static 'images/eventhub-logo.jpg' %}",
       "description": "A platform to discover and share community events."
     }
     </script>
@@ -150,7 +150,7 @@
                     <div class="flex items-center">
                         <img src="{% static 'images/eventhub-logo.jpg' %}" 
                              alt="EventHub Logo" 
-                             class="h-8 w-8 object-contain"
+                             class="h-10 w-10 object-contain"
                              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                         <!-- Fallback logo if image fails to load -->
                         <div class="logo-fallback" style="display: none;">
@@ -264,7 +264,7 @@
                     <div class="flex items-center space-x-3 mb-2">
                         <img src="{% static 'images/eventhub-logo.jpg' %}" 
                              alt="EventHub Logo" 
-                             class="h-8 w-8 object-contain brightness-0 invert"
+                             class="h-10 w-10 object-contain"
                              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                         <!-- Fallback logo for footer -->
                         <div class="logo-fallback" style="display: none;">
