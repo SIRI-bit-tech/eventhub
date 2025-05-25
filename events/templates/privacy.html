@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}Privacy Policy - Event Platform{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-12">
+    <div class="max-w-3xl mx-auto">
+        <h1 class="text-4xl font-bold mb-8">Privacy Policy</h1>
+        <div class="prose lg:prose-xl">
+            <p class="mb-4">Last updated: {% now "F j, Y" %}</p>
+            
+            <h2 class="text-2xl font-semibold mt-8 mb-4">1. Information We Collect</h2>
+            <p class="mb-4">At Event Platform, we collect several types of information for various purposes to provide and improve our service to you.</p>
+            <h3 class="text-xl font-medium mt-6 mb-3">Personal Data</h3>
+            <p class="mb-4">While using our service, we may ask you to provide us with certain personally identifiable information that can be used to contact or identify you. This may include, but is not limited to:</p>
+            <ul class="list-disc pl-5 mb-4">
+                <li>Email address</li>
+                <li>First name and last name</li>
+                <li>Phone number</li>
+                <li>Address, State, Province, ZIP/Postal code, City</li>
+            </ul>
+            
+            <h2 class="text-2xl font-semibold mt-8 mb-4">2. How We Use Your Information</h2>
+            <p class="mb-4">We use the collected data for various purposes:</p>
+            <ul class="list-disc pl-5 mb-4">
+                <li>To provide and maintain our service</li>
+                <li>To notify you about changes to our service</li>
+                <li>To provide customer support</li>
+                <li>To gather analysis or valuable information so that we can improve our service</li>
+                <li>To monitor the usage of our service</li>
+                <li>To detect, prevent and address technical issues</li>
+            </ul>
+            
+            <h2 class="text-2xl font-semibold mt-8 mb-4">3. Security of Data</h2>
+            <p class="mb-4">The security of your data is important to us, but remember that no method of transmission over the Internet, or method of electronic storage is 100% secure. While we strive to use commercially acceptable means to protect your personal data, we cannot guarantee its absolute security.</p>
+            
+            <h2 class="text-2xl font-semibold mt-8 mb-4">4. Changes to This Privacy Policy</h2>
+            <p class="mb-4">We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page. You are advised to review this Privacy Policy periodically for any changes. Changes to this Privacy Policy are effective when they are posted on this page.</p>
+            
+            <h2 class="text-2xl font-semibold mt-8 mb-4">5. Contact Us</h2>
+            <p class="mb-4">If you have any questions about this Privacy Policy, please contact us:</p>
+            <p class="mb-4">By email: privacy@eventplatform.com</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

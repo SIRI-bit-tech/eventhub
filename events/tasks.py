@@ -152,6 +152,62 @@ def send_event_update_notification(event_id, update_message):
 
 
 @shared_task
+def send_contact_email(name, email, subject, message):
+    """
+    Task to send email from contact form
+    """
+    try:
+        # Email to site admin
+        admin_subject = f"Contact Form Submission: {subject}"
+        admin_message = f"""
+You have received a new contact form submission:
+
+Name: {name}
+Email: {email}
+Subject: {subject}
+Message: 
+{message}
+        """
+
+        admin_email_sent = send_mail(
+            subject=admin_subject,
+            message=admin_message,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[settings.ADMIN_EMAIL],
+            fail_silently=False,
+        )
+
+        # Confirmation email to user
+        user_subject = "Thank you for contacting us"
+        user_message = f"""
+Dear {name},
+
+Thank you for contacting Event Platform. We have received your message and will get back to you shortly.
+
+Your message details:
+Subject: {subject}
+
+Best regards,
+Event Platform Team
+        """
+
+        user_email_sent = send_mail(
+            subject=user_subject,
+            message=user_message,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[email],
+            fail_silently=False,
+        )
+
+        logger.info(f'Contact email sent from {email}')
+        return admin_email_sent and user_email_sent
+
+    except Exception as e:
+        logger.error(f'Error sending contact email: {str(e)}')
+        return f'Error sending contact email: {str(e)}'
+
+
+@shared_task
 def send_welcome_email(user_id):
     """
     Send welcome email to new users

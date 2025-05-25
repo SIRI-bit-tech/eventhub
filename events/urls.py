@@ -33,6 +33,11 @@ urlpatterns = [
     path('calendar/events/', views_calendar.get_user_events, name='calendar_events'),
     path('calendar/sync/', views_calendar.google_calendar_sync, name='calendar_sync'),
 
+    path('about/', views.about, name='about'),
+    path('contact/', views.contact, name='contact'),
+    path('privacy/', views.privacy, name='privacy'),
+    path('terms/', views.terms, name='terms'),
+
     # Google Calendar webhook
     path('webhooks/google-calendar/', views.google_calendar_webhook, name='google_calendar_webhook'),
 
