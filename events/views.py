@@ -2,10 +2,12 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
 from django.contrib import messages
+from django.conf import settings
 from django.http import JsonResponse, HttpResponse
 from django.utils import timezone
 from django.db.models import Q, Count
 from django.core.paginator import Paginator
+from django.core.mail import send_mail
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
@@ -222,6 +224,102 @@ def event_edit(request, pk):
         'title': 'Edit Event',
         'event': event
     })
+
+def about(request):
+    """View for the about page"""
+    return render(request, 'events/about.html')
+
+def contact(request):
+    """View for the contact page"""
+    if request.method == 'POST':
+        # Check if it's an AJAX request
+        is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+        
+        # Get form data
+        name = request.POST.get('name', '')
+        email = request.POST.get('email', '')
+        subject = request.POST.get('subject', '')
+        message_text = request.POST.get('message', '')
+        
+        if name and email and subject and message_text:
+            # Process the contact form submission
+            try:
+                # Email to admin
+                admin_subject = f"Contact Form: {subject}"
+                admin_message = f"""
+                New contact form submission:
+                
+                Name: {name}
+                Email: {email}
+                Subject: {subject}
+                Message:
+                {message_text}
+                """
+                
+                send_mail(
+                    subject=admin_subject,
+                    message=admin_message,
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[settings.ADMIN_EMAIL],
+                    fail_silently=False,
+                )
+                
+                # Confirmation email to user
+                user_subject = "Thank you for contacting EventHub"
+                user_message = f"""
+                Dear {name},
+                
+                Thank you for contacting EventHub. We have received your message and will get back to you shortly.
+                
+                Your message:
+                {message_text}
+                
+                Best regards,
+                The EventHub Team
+                """
+                
+                send_mail(
+                    subject=user_subject,
+                    message=user_message,
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[email],
+                    fail_silently=False,
+                )
+                
+                if is_ajax:
+                    return JsonResponse({
+                        'success': True,
+                        'message': 'Your message has been sent. We will contact you soon!'
+                    })
+                else:
+                    messages.success(request, 'Your message has been sent. We will contact you soon!')
+            
+            except Exception as e:
+                if is_ajax:
+                    return JsonResponse({
+                        'success': False,
+                        'message': 'An error occurred while sending your message. Please try again later.'
+                    })
+                else:
+                    messages.error(request, 'An error occurred while sending your message. Please try again later.')
+        else:
+            if is_ajax:
+                return JsonResponse({
+                    'success': False,
+                    'message': 'Please fill in all fields.'
+                })
+            else:
+                messages.error(request, 'Please fill in all fields.')
+    
+    return render(request, 'events/contact.html')
+
+def privacy(request):
+    """View for the privacy policy page"""
+    return render(request, 'events/privacy.html')
+
+def terms(request):
+    """View for the terms of service page"""
+    return render(request, 'events/terms.html')
 
 
 @login_required

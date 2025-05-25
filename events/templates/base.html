@@ -30,7 +30,7 @@
     <link rel="canonical" href="{{ request.build_absolute_uri }}">
     
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
+    <link rel="icon" type="image/png" href="{% static 'images/favicon.ico' %}">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -209,9 +209,9 @@
                 </div>
                 <div class="flex space-x-4">
                     <a href="{% url 'about' %}" class="hover:text-primary-400 transition">About</a>
-                    <a href="{%url 'privacy' %}" class="hover:text-primary-400 transition">Privacy</a>
-                    <a href="{%url 'terms' %}" class="hover:text-primary-400 transition">Terms</a>
-                    <a href="{%url 'contact' %}" class="hover:text-primary-400 transition">Contact</a>
+                    <a href="{% url 'privacy' %}" class="hover:text-primary-400 transition">Privacy</a>
+                    <a href="{% url 'terms' %}" class="hover:text-primary-400 transition">Terms</a>
+                    <a href="{% url 'contact' %}" class="hover:text-primary-400 transition">Contact</a>
                 </div>
             </div>
             <div class="mt-4 text-center text-gray-400">
