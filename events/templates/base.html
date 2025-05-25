@@ -1,5 +1,5 @@
-{% load static %}
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -208,10 +208,10 @@
                     <p class="text-gray-400">Connect with your community</p>
                 </div>
                 <div class="flex space-x-4">
-                    <a href="#" class="hover:text-primary-400 transition">About</a>
-                    <a href="#" class="hover:text-primary-400 transition">Privacy</a>
-                    <a href="#" class="hover:text-primary-400 transition">Terms</a>
-                    <a href="#" class="hover:text-primary-400 transition">Contact</a>
+                    <a href="{% url 'about' %}" class="hover:text-primary-400 transition">About</a>
+                    <a href="{%url 'privacy' %}" class="hover:text-primary-400 transition">Privacy</a>
+                    <a href="{%url 'terms' %}" class="hover:text-primary-400 transition">Terms</a>
+                    <a href="{%url 'contact' %}" class="hover:text-primary-400 transition">Contact</a>
                 </div>
             </div>
             <div class="mt-4 text-center text-gray-400">
